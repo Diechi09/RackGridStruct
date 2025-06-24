@@ -140,6 +140,29 @@ def filter_items():
 
     return jsonify(results)
 
+@app.route("/rack/brand-logos")
+def rack_brand_logos():
+    cursor.execute("""
+        SELECT rack, b.name
+        FROM inventory i
+        JOIN items it ON i.ean = it.ean
+        JOIN brands b ON it.brand_id = b.id
+    """)
+
+    from collections import Counter, defaultdict
+    rack_brand_count = defaultdict(Counter)
+
+    for rack, brand in cursor.fetchall():
+        rack_brand_count[rack][brand] += 1
+
+    # Return most common brand per rack
+    result = {}
+    for rack, counter in rack_brand_count.items():
+        most_common_brand = counter.most_common(1)[0][0]
+        result[rack] = most_common_brand
+
+    return jsonify(result)
+
 
 @app.route("/filters/options")
 def filter_options():
