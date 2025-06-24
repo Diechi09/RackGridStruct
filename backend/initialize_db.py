@@ -19,6 +19,7 @@ CREATE TABLE items (
     ean TEXT PRIMARY KEY,
     brand_id INTEGER,
     rollout TEXT,
+    season TEXT,          
     product_group TEXT,
     style_name TEXT,
     color_name TEXT,
